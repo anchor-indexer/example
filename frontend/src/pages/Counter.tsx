@@ -10,7 +10,8 @@ import * as anchor from '@project-serum/anchor';
 
 import { useWallet } from 'contexts/wallet';
 import { usePrograms } from 'contexts/programs';
-import * as apollo from 'utils/apollo';
+import { useConnection } from 'contexts/connection';
+// import * as apollo from 'utils/apollo';
 
 const useStyles = makeStyles(() => {
   return {
@@ -23,6 +24,7 @@ const useStyles = makeStyles(() => {
 
 const Home: FC = () => {
   const classes = useStyles();
+  const connection = useConnection();
   const { connected, wallet } = useWallet();
   const { provider: providerOrNull, counterProgram } = usePrograms();
   const [count, setCount] = useState(0);
@@ -45,21 +47,25 @@ const Home: FC = () => {
     if (connected) {
       const loadCount = async () => {
         try {
-          const {
-            data: { counter },
-          } = await apollo.client.query({
-            query: apollo.gql`
-              query($authority: String!) {
-                counter(authority: $authority) {
-                  count
-                }
-              }
-            `,
-            variables: {
-              authority: userPubKey.toString(),
-            },
-          });
+          // const {
+          //   data: { counter },
+          // } = await apollo.client.query({
+          //   query: apollo.gql`
+          //     query($authority: String!) {
+          //       counter(authority: $authority) {
+          //         count
+          //       }
+          //     }
+          //   `,
+          //   variables: {
+          //     authority: userPubKey.toString(),
+          //   },
+          // });
+          // if (isMounted) {
+          //   setCount(counter?.count ?? 0);
+          // }
 
+          const counter = await program.account.counter.associated(userPubKey);
           if (isMounted) {
             setCount(counter?.count ?? 0);
           }
@@ -68,16 +74,27 @@ const Home: FC = () => {
         }
       };
 
-      const listener = program.addEventListener('Count', loadCount);
-      unsubs.push(() => {
-        program.removeEventListener(listener);
-      });
+      // const listener = program.addEventListener('Count', loadCount);
+      // unsubs.push(() => {
+      //   program.removeEventListener(listener);
+      // });
+
+      const subscribeToCountChange = async () => {
+        const counterPubkey = await program.account.counter.associatedAddress(
+          userPubKey
+        );
+        const sid = connection.onAccountChange(counterPubkey, loadCount);
+        unsubs.push(() => {
+          connection.removeAccountChangeListener(sid);
+        });
+      };
 
       loadCount();
+      subscribeToCountChange();
     }
 
     return () => unsubs.forEach((unsub) => unsub());
-  }, [connected, userPubKey, program]);
+  }, [connected, userPubKey, program, connection]);
 
   const initializeCounter = useCallback(async () => {
     if (!(program && provider)) return;
@@ -141,8 +158,26 @@ const Home: FC = () => {
   }, [connected, wallet, userPubKey, initializeCounter, program, provider]);
 
   const resetCount = useCallback(async () => {
+    if (!(program && provider)) return;
     if (!connected) return wallet.connect();
-  }, [connected, wallet]);
+
+    let counter;
+    try {
+      counter = await program.account.counter.associated(userPubKey);
+    } catch (e) {}
+    if (!counter) {
+      await initializeCounter();
+    }
+    const counterPubKey = await program.account.counter.associatedAddress(
+      userPubKey
+    );
+    await program.rpc.reset({
+      accounts: {
+        counter: counterPubKey,
+        authority: userPubKey,
+      },
+    });
+  }, [connected, wallet, userPubKey, initializeCounter, program, provider]);
 
   return (
     <Box className={classes.container}>
@@ -151,7 +186,7 @@ const Home: FC = () => {
           <DecrementCountIcon />
         </IconButton>
 
-        <Chip label={count} />
+        <Chip label={count.toString()} />
 
         <IconButton aria-label='Increment Count' onClick={incrementCount}>
           <IncrementCountIcon />

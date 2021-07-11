@@ -120,8 +120,7 @@ export function useListener(emitter: any, eventName: string) {
   }, [emitter, eventName]);
 }
 
-export function abbreviateAddress(address: PublicKey, size = 4) {
-  const base58 = address.toBase58();
+export function abbreviateAddress(base58: string, size = 4) {
   return base58.slice(0, size) + '…' + base58.slice(-size);
 }
 

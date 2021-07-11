@@ -5,7 +5,7 @@ deploy:
 	@anchor build
 	@anchor deploy
 
-v:
+test-validator:
 	@solana-test-validator
 
 indexer:
@@ -13,5 +13,5 @@ indexer:
 
 .PHONY: test \
 	deploy \
-	v \
+	test-validator \
 	indexer

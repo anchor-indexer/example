@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { Button } from '@material-ui/core';
+import { abbreviateAddress } from 'utils/solana';
 // import { LinkOutlined } from '@ant-design/icons';
 
 const LinkAddress: FC<{ title?: string; address: string }> = ({
@@ -15,7 +16,7 @@ const LinkAddress: FC<{ title?: string; address: string }> = ({
         target='_blank'
         rel='noopener noreferrer'
       >
-        {address}
+        {abbreviateAddress(address)}
       </Button>
     </div>
   );

@@ -6,18 +6,9 @@ import {
   useEffect,
   useMemo,
 } from 'react';
-import {
-  Account,
-  Connection,
-  // AccountInfo, PublicKey
-} from '@solana/web3.js';
-// import * as anchor from '@project-serum/anchor';
-// import tuple from 'immutable-tuple';
-// import { setCache, useAsyncData } from 'utils/fetch-loop';
+import { Account, Connection } from '@solana/web3.js';
 import { useLocalStorageState } from 'utils/solana';
 import { ENDPOINTS, ENDPOINT } from 'config';
-
-// const accountListenerCount = new Map();
 
 const ConnectionContext = createContext<{
   endpoint: any;
@@ -129,60 +120,3 @@ export function useConnectionConfig() {
     setCustomEndpoints: context.setCustomEndpoints,
   };
 }
-
-// export function useAccountInfo(publicKey: PublicKey) {
-//   const connection = useConnection();
-//   const cacheKey = tuple(connection, publicKey?.toBase58());
-//   const [accountInfo, loaded] = useAsyncData(
-//     async () => (publicKey ? connection.getAccountInfo(publicKey) : null),
-//     cacheKey,
-//     { refreshInterval: 60_000 }
-//   );
-//   useEffect(() => {
-//     if (!publicKey) {
-//       return;
-//     }
-//     if (accountListenerCount.has(cacheKey)) {
-//       let currentItem = accountListenerCount.get(cacheKey);
-//       ++currentItem.count;
-//     } else {
-//       let previousData: any = null;
-//       const subscriptionId = connection.onAccountChange(publicKey, (e: any) => {
-//         if (e.data) {
-//           if (!previousData || !previousData.equals(e.data)) {
-//             setCache(cacheKey, e);
-//           } else {
-//           }
-//           previousData = e.data;
-//         }
-//       });
-//       accountListenerCount.set(cacheKey, { count: 1, subscriptionId });
-//     }
-//     return () => {
-//       let currentItem = accountListenerCount.get(cacheKey);
-//       let nextCount = currentItem.count - 1;
-//       if (nextCount <= 0) {
-//         connection.removeAccountChangeListener(currentItem.subscriptionId);
-//         accountListenerCount.delete(cacheKey);
-//       } else {
-//         --currentItem.count;
-//       }
-//     };
-//     // eslint-disable-next-line react-hooks/exhaustive-deps
-//   }, [cacheKey]);
-//   return [accountInfo, loaded];
-// }
-
-// export function useAccountData(publicKey: PublicKey) {
-//   const [accountInfo] = useAccountInfo(publicKey);
-//   return accountInfo && accountInfo.data;
-// }
-
-// export function setInitialAccountInfo(
-//   connection: Connection,
-//   publicKey: PublicKey,
-//   accountInfo: AccountInfo<any>
-// ) {
-//   const cacheKey = tuple(connection, publicKey.toBase58());
-//   setCache(cacheKey, accountInfo, { initializeOnly: true });
-// }

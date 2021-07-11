@@ -37,10 +37,9 @@ export const ProgramsProvider: FC<{ children: ReactNode }> = ({ children }) => {
     if (provider) {
       anchor.setProvider(provider);
 
-      const programId = '5KtpkTJvEn5LBWJjt5LeFBnCYYxqUJgQgE8h4q6PqN9M';
       const counterProgram = new anchor.Program(
         COUNTER_PROGRAM_IDL as anchor.Idl,
-        programId
+        COUNTER_PROGRAM_IDL.metadata.address
       );
       setCounterProgram(counterProgram);
     }
