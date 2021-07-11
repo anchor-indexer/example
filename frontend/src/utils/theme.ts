@@ -17,7 +17,7 @@ export default createMuiTheme({
       main: '#ffffff',
     },
     secondary: {
-      main: 'rgb(218, 255, 13)',
+      main: '#fc0',
     },
   },
   overrides: {
