@@ -10,7 +10,7 @@ describe('counter', () => {
   const program = anchor.workspace.Counter;
   const userPubKey = provider.wallet.publicKey;
 
-  it('Initializes', async () => {
+  it('Initializes count', async () => {
     const counterPubKey = await program.account.counter.associatedAddress(
       userPubKey
     );
@@ -28,7 +28,7 @@ describe('counter', () => {
     assert.ok(counter.count.eq(new anchor.BN(0)));
   });
 
-  it('Increments', async () => {
+  it('Increments count', async () => {
     const counterPubKey = await program.account.counter.associatedAddress(
       userPubKey
     );
@@ -44,7 +44,7 @@ describe('counter', () => {
     assert.ok(counter.count.eq(new anchor.BN(1)));
   });
 
-  it('Decrements', async () => {
+  it('Decrements count', async () => {
     const counterPubKey = await program.account.counter.associatedAddress(
       userPubKey
     );
@@ -58,5 +58,48 @@ describe('counter', () => {
 
     const counter = await program.account.counter.associated(userPubKey);
     assert.ok(counter.count.eq(new anchor.BN(0)));
+  });
+
+  it('Resets count', async () => {
+    const counterPubKey = await program.account.counter.associatedAddress(
+      userPubKey
+    );
+
+    await program.rpc.increment({
+      accounts: {
+        counter: counterPubKey,
+        authority: userPubKey,
+      },
+    });
+    assert.ok(
+      (await program.account.counter.associated(userPubKey)).count.eq(
+        new anchor.BN(1)
+      )
+    );
+
+    await program.rpc.increment({
+      accounts: {
+        counter: counterPubKey,
+        authority: userPubKey,
+      },
+    });
+    assert.ok(
+      (await program.account.counter.associated(userPubKey)).count.eq(
+        new anchor.BN(2)
+      )
+    );
+
+    await program.rpc.reset({
+      accounts: {
+        counter: counterPubKey,
+        authority: userPubKey,
+      },
+    });
+
+    assert.ok(
+      (await program.account.counter.associated(userPubKey)).count.eq(
+        new anchor.BN(0)
+      )
+    );
   });
 });

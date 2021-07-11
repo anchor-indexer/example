@@ -50,6 +50,21 @@ mod counter {
 
         Ok(())
     }
+
+    pub fn reset(ctx: Context<Reset>) -> ProgramResult{
+        let counter = &mut ctx.accounts.counter;
+        if counter.authority != *ctx.accounts.authority.key {
+            return Err(ErrorCode::Unauthorized.into());
+        }
+
+        counter.count = 0;
+
+        emit!(ResetCounterEvent {
+            authority: counter.authority,
+        });
+
+        Ok(())
+    }
 }
 
 #[derive(Accounts)]
@@ -78,6 +93,14 @@ pub struct Decrement<'info> {
     pub authority: AccountInfo<'info>,
 }
 
+#[derive(Accounts)]
+pub struct Reset<'info> {
+    #[account(mut, has_one = authority)]
+    pub counter: ProgramAccount<'info, Counter>,
+    #[account(signer)]
+    pub authority: AccountInfo<'info>,
+}
+
 #[associated]
 pub struct Counter {
     pub authority: Pubkey,
@@ -99,6 +122,11 @@ pub struct IncrementCounterEvent {
 pub struct DecrementCounterEvent {
     authority: Pubkey,
     count: u64,
+}
+
+#[event]
+pub struct ResetCounterEvent {
+    authority: Pubkey,
 }
 
 #[error]
