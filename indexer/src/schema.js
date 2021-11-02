@@ -1,4 +1,4 @@
-const { gql } = require('apollo-server');
+const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
   type Query {
@@ -8,6 +8,11 @@ const typeDefs = gql`
   type Mutation {
     initializeCounter(authority: String!): Response!
     updateCounter(authority: String!, count: Int!): Response!
+    resetCounter(authority: String!): Response!
+  }
+
+  type Subscription {
+    counterChanged(authority: String!): Counter
   }
 
   type Response {

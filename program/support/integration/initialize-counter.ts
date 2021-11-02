@@ -5,21 +5,17 @@ import utils from './utils';
 main();
 
 async function main() {
-  const { program, userPubKey } = utils();
+  const { program, userAccount, counterAccount, bump } = await utils();
 
-  const counterPubKey = await program.account.counter.associatedAddress(
-    userPubKey
-  );
-
-  await program.rpc.initialize({
+  await program.rpc.initialize(bump, {
     accounts: {
-      counter: counterPubKey,
-      authority: userPubKey,
+      counter: counterAccount,
+      authority: userAccount,
       rent: anchor.web3.SYSVAR_RENT_PUBKEY,
       systemProgram: anchor.web3.SystemProgram.programId,
     },
   });
 
-  const counter = await program.account.counter.associated(userPubKey);
-  assert.ok(counter.count.eq(new anchor.BN(0)));
+  const counterInfo = await program.account.counter.fetch(counterAccount);
+  assert.ok(counterInfo.count.eq(new anchor.BN(0)));
 }

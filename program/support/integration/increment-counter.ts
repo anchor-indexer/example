@@ -3,16 +3,12 @@ import utils from './utils';
 main();
 
 async function main() {
-  const { program, userPubKey } = utils();
-
-  const counterPubKey = await program.account.counter.associatedAddress(
-    userPubKey
-  );
+  const { program, userAccount, counterAccount } = await utils();
 
   await program.rpc.increment({
     accounts: {
-      counter: counterPubKey,
-      authority: userPubKey,
+      counter: counterAccount,
+      authority: userAccount,
     },
   });
 }

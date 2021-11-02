@@ -24,17 +24,15 @@ const useStyles = makeStyles(() => {
 const Home: FC = () => {
   const classes = useStyles();
   const connection = useConnection();
-  const { connected, wallet } = useWallet();
+  const { connected, publicKey: userAccount } = useWallet();
   const [balance, setBalance] = useState(0);
 
   const airdrop = useCallback(async () => {
-    if (!wallet.publicKey) {
-      return;
+    if (userAccount) {
+      await connection.requestAirdrop(userAccount, 2 * LAMPORTS_PER_SOL);
+      console.log('done');
     }
-
-    await connection.requestAirdrop(wallet.publicKey, 2 * LAMPORTS_PER_SOL);
-    console.log('done');
-  }, [wallet.publicKey, connection]);
+  }, [userAccount, connection]);
 
   useEffect(() => {
     if (!connection) return;
@@ -48,13 +46,13 @@ const Home: FC = () => {
 
     if (connected) {
       const loadBalance = async () => {
-        const balance = await connection.getBalance(wallet.publicKey);
+        const balance = await connection.getBalance(userAccount);
         if (isMounted) {
           setBalance(balance);
         }
       };
 
-      const sid = connection.onAccountChange(wallet.publicKey, loadBalance);
+      const sid = connection.onAccountChange(userAccount, loadBalance);
       unsubs.push(() => {
         connection.removeAccountChangeListener(sid);
       });
@@ -63,7 +61,7 @@ const Home: FC = () => {
     }
 
     return () => unsubs.forEach((unsub) => unsub());
-  }, [connection, connected, wallet]);
+  }, [connection, connected, userAccount]);
 
   return (
     <Box className={classes.container}>

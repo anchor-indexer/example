@@ -5,10 +5,12 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { Route, Switch, Redirect } from 'react-router-dom';
 
+import { ConnectionWalletAdapterProvider } from 'contexts/connection-wallet-adapter';
 import { ConnectionProvider } from 'contexts/connection';
 import { WalletProvider } from 'contexts/wallet';
-import { ProgramsProvider } from 'contexts/programs';
+import { ProgramProvider } from 'contexts/program';
 import { UIProvider } from 'contexts/ui';
+import { CounterProvider } from 'contexts/counter';
 
 import Counter from 'pages/Counter';
 import Wallet from 'pages/Wallet';
@@ -22,27 +24,31 @@ render(
     <ThemeProvider {...{ theme }}>
       <CssBaseline />
 
-      <ConnectionProvider>
-        <WalletProvider>
-          <ProgramsProvider>
-            <UIProvider>
-              <BrowserRouter>
-                <App>
-                  <Switch>
-                    <Route path='/counter'>
-                      <Counter />
-                    </Route>
-                    <Route path='/wallet'>
-                      <Wallet />
-                    </Route>
-                    <Redirect to='/counter' />
-                  </Switch>
-                </App>
-              </BrowserRouter>
-            </UIProvider>
-          </ProgramsProvider>
-        </WalletProvider>
-      </ConnectionProvider>
+      <ConnectionWalletAdapterProvider>
+        <ConnectionProvider>
+          <WalletProvider>
+            <ProgramProvider>
+              <UIProvider>
+                <CounterProvider>
+                  <BrowserRouter>
+                    <App>
+                      <Switch>
+                        <Route path='/counter'>
+                          <Counter />
+                        </Route>
+                        <Route path='/wallet'>
+                          <Wallet />
+                        </Route>
+                        <Redirect to='/counter' />
+                      </Switch>
+                    </App>
+                  </BrowserRouter>
+                </CounterProvider>
+              </UIProvider>
+            </ProgramProvider>
+          </WalletProvider>
+        </ConnectionProvider>
+      </ConnectionWalletAdapterProvider>
     </ThemeProvider>
   </StrictMode>,
   document.getElementById('root')

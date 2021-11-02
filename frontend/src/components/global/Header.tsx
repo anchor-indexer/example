@@ -5,13 +5,11 @@ import Box from '@material-ui/core/Box';
 import AppBar from '@material-ui/core/AppBar';
 import Typography from '@material-ui/core/Typography';
 import Toolbar from '@material-ui/core/Toolbar';
-import Button from '@material-ui/core/Button';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
+import { WalletMultiButton } from '@solana/wallet-adapter-material-ui';
 
-import { APP_NAME, ENDPOINT } from 'config';
-import { useWallet } from 'contexts/wallet';
-import LinkAddress from 'components/shared/LinkAddress';
+import { APP_NAME } from 'config';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -40,7 +38,6 @@ const LINKS = [
 
 const Header: FC = () => {
   const classes = useStyles();
-  const { connected, wallet } = useWallet();
 
   const path = window.location.pathname;
 
@@ -75,21 +72,9 @@ const Header: FC = () => {
 
         <div className='flex flex-grow'></div>
 
-        {connected ? (
-          <>
-            <Box mr={2} className={'flex items-center'}>
-              <LinkAddress address={wallet.publicKey.toBase58()} /> (
-              {ENDPOINT.name})
-            </Box>
-            <Button color='secondary' onClick={wallet.disconnect}>
-              Disconnect
-            </Button>
-          </>
-        ) : (
-          <Button color='secondary' onClick={wallet.connect}>
-            Connect Wallet
-          </Button>
-        )}
+        <Box marginTop={-1.5}>
+          <WalletMultiButton color='secondary' variant='text' />
+        </Box>
       </Toolbar>
     </AppBar>
   );

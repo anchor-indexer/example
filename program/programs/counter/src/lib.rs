@@ -1,15 +1,24 @@
-// #region code
+pub mod account;
+pub mod context;
+pub mod error;
+pub mod event;
 use anchor_lang::prelude::*;
+use context::*;
+use error::*;
+use event::*;
+
+declare_id!("3eGGxWCo5t6we2cZXpoeEzDbrmbgJHVyjTASBrJKAmfp");
 
 #[program]
 mod counter {
     use super::*;
 
-    pub fn initialize(ctx: Context<Initialize>) -> ProgramResult {
-        let counter = &mut ctx.accounts.counter;
+    pub fn initialize(ctx: Context<Initialize>, bump: u8) -> ProgramResult {
+        let counter = &mut ctx.accounts.counter.load_init()?;
 
         counter.authority = *ctx.accounts.authority.key;
         counter.count = 0;
+        counter.bump = bump;
 
         emit!(InitializeCounterEvent {
             authority: counter.authority,
@@ -18,8 +27,8 @@ mod counter {
         Ok(())
     }
 
-    pub fn increment(ctx: Context<Increment>) -> ProgramResult{
-        let counter = &mut ctx.accounts.counter;
+    pub fn increment(ctx: Context<Increment>) -> ProgramResult {
+        let counter = &mut ctx.accounts.counter.load_mut()?;
         if counter.authority != *ctx.accounts.authority.key {
             return Err(ErrorCode::Unauthorized.into());
         }
@@ -33,8 +42,8 @@ mod counter {
         Ok(())
     }
 
-    pub fn decrement(ctx: Context<Decrement>) -> ProgramResult{
-        let counter = &mut ctx.accounts.counter;
+    pub fn decrement(ctx: Context<Decrement>) -> ProgramResult {
+        let counter = &mut ctx.accounts.counter.load_mut()?;
         if counter.authority != *ctx.accounts.authority.key {
             return Err(ErrorCode::Unauthorized.into());
         }
@@ -51,8 +60,8 @@ mod counter {
         Ok(())
     }
 
-    pub fn reset(ctx: Context<Reset>) -> ProgramResult{
-        let counter = &mut ctx.accounts.counter;
+    pub fn reset(ctx: Context<Reset>) -> ProgramResult {
+        let counter = &mut ctx.accounts.counter.load_mut()?;
         if counter.authority != *ctx.accounts.authority.key {
             return Err(ErrorCode::Unauthorized.into());
         }
@@ -65,74 +74,4 @@ mod counter {
 
         Ok(())
     }
-}
-
-#[derive(Accounts)]
-pub struct Initialize<'info> {
-    #[account(init, associated = authority)]
-    pub counter: ProgramAccount<'info, Counter>,
-    #[account(signer)]
-    pub authority: AccountInfo<'info>,
-    rent: Sysvar<'info, Rent>,
-    system_program: AccountInfo<'info>,
-}
-
-#[derive(Accounts)]
-pub struct Increment<'info> {
-    #[account(mut, has_one = authority)]
-    pub counter: ProgramAccount<'info, Counter>,
-    #[account(signer)]
-    pub authority: AccountInfo<'info>,
-}
-
-#[derive(Accounts)]
-pub struct Decrement<'info> {
-    #[account(mut, has_one = authority)]
-    pub counter: ProgramAccount<'info, Counter>,
-    #[account(signer)]
-    pub authority: AccountInfo<'info>,
-}
-
-#[derive(Accounts)]
-pub struct Reset<'info> {
-    #[account(mut, has_one = authority)]
-    pub counter: ProgramAccount<'info, Counter>,
-    #[account(signer)]
-    pub authority: AccountInfo<'info>,
-}
-
-#[associated]
-pub struct Counter {
-    pub authority: Pubkey,
-    pub count: u64,
-}
-
-#[event]
-pub struct InitializeCounterEvent {
-    authority: Pubkey,
-}
-
-#[event]
-pub struct IncrementCounterEvent {
-    authority: Pubkey,
-    count: u64,
-}
-
-#[event]
-pub struct DecrementCounterEvent {
-    authority: Pubkey,
-    count: u64,
-}
-
-#[event]
-pub struct ResetCounterEvent {
-    authority: Pubkey,
-}
-
-#[error]
-pub enum ErrorCode {
-    #[msg("You are not authorized to perform this action.")]
-    Unauthorized,
-    #[msg("Counter is at zero")]
-    ZeroCounter,
 }

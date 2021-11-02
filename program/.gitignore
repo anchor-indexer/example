@@ -13,3 +13,6 @@ test-ledger
 .DS_Store
 package-lock.json
 yarn.lock
+
+.env
+/keys

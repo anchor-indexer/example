@@ -16,19 +16,19 @@ class API extends DataSource {
     this.context = config.context;
   }
 
-  async createCounter(authority) {
-    return await this.store.counters.create({ authority, count: 0 });
-  }
-
-  async updateCounter(authority, count) {
-    const counter = await this.store.counters.findOne({ where: {authority} });
-    counter.count = count;
-    await counter.save();
+  async upsertCounter(authority, count) {
+    let counter = await this.store.counters.findOne({ where: { authority } });
+    if (counter) {
+      counter.count = count;
+      await counter.save();
+    } else {
+      counter = await this.store.counters.create({ authority, count });
+    }
     return counter;
   }
 
   async getCounter(authority) {
-    return await this.store.counters.findOne({ where: {authority} });
+    return await this.store.counters.findOne({ where: { authority } });
   }
 }
 

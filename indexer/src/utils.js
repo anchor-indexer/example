@@ -1,4 +1,5 @@
-const {Sequelize} = require('sequelize');
+const { Sequelize } = require('sequelize');
+const { PubSub } = require('graphql-subscriptions');
 
 module.exports.paginateResults = ({
   after: cursor,
@@ -10,7 +11,7 @@ module.exports.paginateResults = ({
   if (pageSize < 1) return [];
 
   if (!cursor) return results.slice(0, pageSize);
-  const cursorIndex = results.findIndex(item => {
+  const cursorIndex = results.findIndex((item) => {
     // if an item has a `cursor` on it, use that, otherwise try to generate one
     let itemCursor = item.cursor ? item.cursor : getCursor(item);
 
@@ -23,7 +24,7 @@ module.exports.paginateResults = ({
       ? []
       : results.slice(
           cursorIndex + 1,
-          Math.min(results.length, cursorIndex + 1 + pageSize),
+          Math.min(results.length, cursorIndex + 1 + pageSize)
         )
     : results.slice(0, pageSize);
 };
@@ -31,7 +32,7 @@ module.exports.paginateResults = ({
 module.exports.createStore = () => {
   const db = new Sequelize({
     dialect: 'sqlite',
-    storage: './store.sqlite'
+    storage: './store.sqlite',
   });
 
   const counters = db.define('counter', {
@@ -43,3 +44,5 @@ module.exports.createStore = () => {
 
   return { db, counters };
 };
+
+module.exports.pubsub = new PubSub();

@@ -44,6 +44,17 @@ async function main() {
       },
     });
   });
+
+  program.addEventListener('ResetCounterEvent', (data) => {
+    console.log('reset', data);
+
+    client.mutate({
+      mutation: RESET_COUNTER_GQL,
+      variables: {
+        authority: data.authority.toString(),
+      },
+    });
+  });
 }
 
 const INITIALIZE_COUNTER_GQL = gql`
@@ -61,6 +72,18 @@ const INITIALIZE_COUNTER_GQL = gql`
 const UPDATE_COUNTER_GQL = gql`
   mutation ($authority: String!, $count: Int!) {
     updateCounter(authority: $authority, count: $count) {
+      counter {
+        id
+        authority
+        count
+      }
+    }
+  }
+`;
+
+const RESET_COUNTER_GQL = gql`
+  mutation ($authority: String!) {
+    resetCounter(authority: $authority) {
       counter {
         id
         authority

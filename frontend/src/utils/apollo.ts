@@ -1,65 +1,31 @@
-import {
-  ApolloClient,
-  NormalizedCacheObject,
-  InMemoryCache,
-  gql as _gql,
-  // ApolloProvider,
-  // useQuery,
-  // Reference,
-  // makeVar,
-} from '@apollo/client';
+import { ApolloClient, HttpLink, InMemoryCache, split } from '@apollo/client';
+import { WebSocketLink } from '@apollo/client/link/ws';
+import { getMainDefinition } from '@apollo/client/utilities';
 
-export const gql = _gql;
+const httpLink = new HttpLink({
+  uri: 'http://localhost:5300/graphql',
+});
 
-export const cache: InMemoryCache = new InMemoryCache({
-  typePolicies: {
-    Query: {
-      fields: {
-        // isLoggedIn: {
-        //   read() {
-        //     return isLoggedInVar();
-        //   }
-        // },
-        // cartItems: {
-        //   read() {
-        //     return cartItemsVar();
-        //   }
-        // },
-        // launches: {
-        //   keyArgs: false,
-        //   merge(existing, incoming) {
-        //     let launches: Reference[] = [];
-        //     if (existing && existing.launches) {
-        //       launches = launches.concat(existing.launches);
-        //     }
-        //     if (incoming && incoming.launches) {
-        //       launches = launches.concat(incoming.launches);
-        //     }
-        //     return {
-        //       ...incoming,
-        //       launches,
-        //     };
-        //   }
-        // }
-      },
-    },
+const wsLink = new WebSocketLink({
+  uri: 'ws://localhost:5300/graphql',
+  options: {
+    reconnect: true,
   },
 });
 
-// export const typeDefs = gql`
-//   extend type Query {
-//     isLoggedIn: Boolean!
-//     cartItems: [ID!]!
-//   }
-// `;
+const splitLink = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return (
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+    );
+  },
+  wsLink,
+  httpLink
+);
 
-// export const isLoggedInVar =
-//   makeVar<boolean>(!!localStorage.getItem('token'));
-// export const cartItemsVar = makeVar<string[]>([]);
-
-export const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
-  cache,
-  uri: 'http://localhost:4000/graphql',
-  // typeDefs,
-  resolvers: {},
+export const client = new ApolloClient({
+  link: splitLink,
+  cache: new InMemoryCache(),
 });
