@@ -1,3 +1,23 @@
 {
-	"presets": ["next/babel"]
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "useBuiltIns": "usage",
+        "corejs": 3.15,
+        "targets": "> 0.25%, not dead",
+        "debug": true
+      }
+    ],
+    "@babel/preset-react",
+    "@babel/preset-typescript"
+  ],
+  "plugins": [
+    [
+      "@babel/plugin-proposal-decorators",
+      {
+        "legacy": true
+      }
+    ]
+  ]
 }

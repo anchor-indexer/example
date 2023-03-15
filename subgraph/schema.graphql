@@ -1,0 +1,11 @@
+type Counter @entity {
+  id: ID! # counter owner
+  authority: Bytes!
+  count: BigInt!
+}
+
+type Call @entity {
+  id: ID! # counter owner
+  authority: Bytes!
+  count: BigInt!
+}

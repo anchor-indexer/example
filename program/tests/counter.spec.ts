@@ -2,7 +2,7 @@ import assert from 'assert';
 import * as anchor from '@project-serum/anchor';
 
 describe('counter', () => {
-  const provider = anchor.Provider.local();
+  const provider = anchor.AnchorProvider.local();
   anchor.setProvider(provider);
 
   const program = anchor.workspace.Counter;
@@ -22,7 +22,6 @@ describe('counter', () => {
       accounts: {
         counter: counterAccount,
         authority: userAccount,
-        rent: anchor.web3.SYSVAR_RENT_PUBKEY,
         systemProgram: anchor.web3.SystemProgram.programId,
       },
     });

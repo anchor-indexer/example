@@ -8,3 +8,7 @@ pub struct Counter {
   pub count: u64,        // 8
   pub bump: u8,          // 1
 }
+
+impl Counter {
+  pub const SIZE: usize = 8 + 32 + 8 + 1;
+}

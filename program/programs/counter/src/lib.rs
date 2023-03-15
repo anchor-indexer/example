@@ -1,77 +1,29 @@
 pub mod account;
-pub mod context;
 pub mod error;
 pub mod event;
+pub mod instructions;
 use anchor_lang::prelude::*;
-use context::*;
-use error::*;
-use event::*;
+use instructions::*;
 
-declare_id!("3eGGxWCo5t6we2cZXpoeEzDbrmbgJHVyjTASBrJKAmfp");
+declare_id!("CcXBZXzEMqrNfHx7CrLVEefiGrVrkZZxMgAr1DRaRsFz");
 
 #[program]
 mod counter {
     use super::*;
 
     pub fn initialize(ctx: Context<Initialize>, bump: u8) -> ProgramResult {
-        let counter = &mut ctx.accounts.counter.load_init()?;
-
-        counter.authority = *ctx.accounts.authority.key;
-        counter.count = 0;
-        counter.bump = bump;
-
-        emit!(InitializeCounterEvent {
-            authority: counter.authority,
-        });
-
-        Ok(())
+        initialize::handler(ctx, bump)
     }
 
     pub fn increment(ctx: Context<Increment>) -> ProgramResult {
-        let counter = &mut ctx.accounts.counter.load_mut()?;
-        if counter.authority != *ctx.accounts.authority.key {
-            return Err(ErrorCode::Unauthorized.into());
-        }
-        counter.count += 1;
-
-        emit!(IncrementCounterEvent {
-            authority: counter.authority,
-            count: counter.count,
-        });
-
-        Ok(())
+        increment::handler(ctx)
     }
 
     pub fn decrement(ctx: Context<Decrement>) -> ProgramResult {
-        let counter = &mut ctx.accounts.counter.load_mut()?;
-        if counter.authority != *ctx.accounts.authority.key {
-            return Err(ErrorCode::Unauthorized.into());
-        }
-        if counter.count == 0 {
-            return Err(ErrorCode::ZeroCounter.into());
-        }
-        counter.count -= 1;
-
-        emit!(DecrementCounterEvent {
-            authority: counter.authority,
-            count: counter.count,
-        });
-
-        Ok(())
+        decrement::handler(ctx)
     }
 
     pub fn reset(ctx: Context<Reset>) -> ProgramResult {
-        let counter = &mut ctx.accounts.counter.load_mut()?;
-        if counter.authority != *ctx.accounts.authority.key {
-            return Err(ErrorCode::Unauthorized.into());
-        }
-
-        counter.count = 0;
-
-        emit!(ResetCounterEvent {
-            authority: counter.authority,
-        });
-
-        Ok(())
+        reset::handler(ctx)
     }
 }

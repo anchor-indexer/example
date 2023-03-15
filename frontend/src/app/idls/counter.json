@@ -1,0 +1,163 @@
+{
+  "version": "0.1.0",
+  "name": "counter",
+  "instructions": [
+    {
+      "name": "initialize",
+      "accounts": [
+        {
+          "name": "counter",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "bump",
+          "type": "u8"
+        }
+      ]
+    },
+    {
+      "name": "increment",
+      "accounts": [
+        {
+          "name": "counter",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "decrement",
+      "accounts": [
+        {
+          "name": "counter",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "reset",
+      "accounts": [
+        {
+          "name": "counter",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Counter",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "publicKey"
+          },
+          {
+            "name": "count",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ],
+  "types": [
+    {
+      "name": "ErrorCode",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Unauthorized"
+          },
+          {
+            "name": "ZeroCounter"
+          }
+        ]
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "InitializeCounterEvent",
+      "fields": [
+        {
+          "name": "authority",
+          "type": "publicKey",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "IncrementCounterEvent",
+      "fields": [
+        {
+          "name": "authority",
+          "type": "publicKey",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "DecrementCounterEvent",
+      "fields": [
+        {
+          "name": "authority",
+          "type": "publicKey",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "ResetCounterEvent",
+      "fields": [
+        {
+          "name": "authority",
+          "type": "publicKey",
+          "index": false
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "address": "Bi99o1ryNWTZRxdyENFadCVxWPweK6TV8YrRzdL6Bbs5"
+  }
+}

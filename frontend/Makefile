@@ -1,17 +1,19 @@
 CWD=$(shell pwd)
 
-run: node_modules src/idl
-	@yarn start
+run: node_modules src/app/idls
+	@yarn dev
 
 node_modules:
 	@yarn
 
-src/idl:
-	@ln -s $(CWD)/../program/target/idl src
+src/app/idls:
+	@mkdir -p $@
+	@cp -f $(CWD)/../program/target/idl/counter.json $@
 
 lint:
 	@yarn $@
 
 .PHONY: \
 	run \
-	lint
+	lint \
+	src/app/idls

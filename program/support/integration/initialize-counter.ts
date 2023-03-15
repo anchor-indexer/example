@@ -2,7 +2,7 @@ import assert from 'assert';
 import * as anchor from '@project-serum/anchor';
 import utils from './utils';
 
-main();
+main().catch(console.error);
 
 async function main() {
   const { program, userAccount, counterAccount, bump } = await utils();
@@ -11,7 +11,6 @@ async function main() {
     accounts: {
       counter: counterAccount,
       authority: userAccount,
-      rent: anchor.web3.SYSVAR_RENT_PUBKEY,
       systemProgram: anchor.web3.SystemProgram.programId,
     },
   });

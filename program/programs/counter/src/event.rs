@@ -8,13 +8,11 @@ pub struct InitializeCounterEvent {
 #[event]
 pub struct IncrementCounterEvent {
   pub authority: Pubkey,
-  pub count: u64,
 }
 
 #[event]
 pub struct DecrementCounterEvent {
   pub authority: Pubkey,
-  pub count: u64,
 }
 
 #[event]

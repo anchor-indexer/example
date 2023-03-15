@@ -1,0 +1,38 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: solana/program
+    name: counter
+    source:
+      address: 'Bi99o1ryNWTZRxdyENFadCVxWPweK6TV8YrRzdL6Bbs5'
+      idl: counter
+      startSignature: 5rrAjashuRREPVZrwYkMbMG3CyjviDKRuBY5raoQEb1SDftr5921b9NJxmLjzcto4ZMWp3FyWrQW6JUGqpd7faXE
+    mapping:
+      kind: solana/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Counter
+      idls:
+        - name: counter
+          file: ./idls/counter.json
+      eventHandlers:
+        - event: InitializeCounterEvent
+          handler: handleInitializeCounterEvent
+        - event: IncrementCounterEvent
+          handler: handleIncrementCounterEvent
+        - event: DecrementCounterEvent
+          handler: handleDecrementCounterEvent
+        - event: ResetCounterEvent
+          handler: handleResetCounterEvent
+      callHandlers:
+        - function: initialize
+          handler: handleInitializeCall
+        - function: increment
+          handler: handleIncrementCall
+        - function: decrement
+          handler: handleDecrementCall
+        - function: reset
+          handler: handleResetCall
+      file: ./src/mapping.ts

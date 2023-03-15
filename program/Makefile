@@ -1,25 +1,20 @@
+o?=o
+
 test:
 	@anchor $@
 
+idl:
+	@anchor --provider.cluster devnet idl init Bi99o1ryNWTZRxdyENFadCVxWPweK6TV8YrRzdL6Bbs5 --filepath target/idl/counter.json
+#	@anchor --provider.cluster devnet idl upgrade Bi99o1ryNWTZRxdyENFadCVxWPweK6TV8YrRzdL6Bbs5 --filepath target/idl/counter.json
+
 deploy:
 	@anchor build
-	@anchor deploy
-
-validator:
-	@solana-test-validator
-
-indexer:
-	@env-cmd ./node_modules/.bin/ts-node support/indexer/indexer.ts 
+	@anchor deploy --provider.cluster devnet
 
 integration:
 	@env-cmd ./node_modules/.bin/ts-node $o
 
-keygen:
-	@solana-keygen new --force --outfile=./keys/default.json
-	@solana airdrop 1 --keypair ./keys/default.json --url=http://127.0.0.1:8899
+airdrop:
+	@solana airdrop 1 $(solana address) --url=devnet
 
-.PHONY: test \
-	deploy \
-	validator \
-	indexer \
-	keygen
+.PHONY: test idl deploy integration airdrop
