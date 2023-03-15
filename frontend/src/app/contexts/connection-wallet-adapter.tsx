@@ -6,7 +6,7 @@ import { WalletDialogProvider } from '@solana/wallet-adapter-material-ui';
 import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets';
 
 import { DEVNET_SOLANA_RPC_URL, DEVNET_SOLANA_WS_URL } from '@app/config';
-console.log({ DEVNET_SOLANA_RPC_URL, DEVNET_SOLANA_WS_URL });
+
 const CONFIG: anchor.web3.ConnectionConfig = {
   commitment: 'confirmed' as anchor.web3.Commitment,
   wsEndpoint: DEVNET_SOLANA_WS_URL,

@@ -1,3 +1,5 @@
+import { Buffer } from 'buffer';
+
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 
@@ -9,6 +11,8 @@ declare global {
     Buffer: any;
   }
 }
+
+window.Buffer = Buffer;
 
 const container = document.getElementById('root')!;
 
