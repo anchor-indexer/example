@@ -5,7 +5,7 @@ dataSources:
   - kind: solana/program
     name: counter
     source:
-      address: 'Bi99o1ryNWTZRxdyENFadCVxWPweK6TV8YrRzdL6Bbs5'
+      address: 'GqbUWMWQpgGMprXUEPkxuifKGZidL1CxxFkbqBgVqcDV'
       idl: counter
       startSignature: 5rrAjashuRREPVZrwYkMbMG3CyjviDKRuBY5raoQEb1SDftr5921b9NJxmLjzcto4ZMWp3FyWrQW6JUGqpd7faXE
     mapping:

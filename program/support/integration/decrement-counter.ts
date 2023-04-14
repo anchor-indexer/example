@@ -14,4 +14,5 @@ async function main() {
 
   // const counterInfo = await program.account.counter.fetch(counterAccount);
   // assert.ok(counterInfo.count.eq(new anchor.BN(0)));
+  console.log('done');
 }

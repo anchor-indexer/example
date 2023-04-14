@@ -5,25 +5,25 @@ pub mod instructions;
 use anchor_lang::prelude::*;
 use instructions::*;
 
-declare_id!("CcXBZXzEMqrNfHx7CrLVEefiGrVrkZZxMgAr1DRaRsFz");
+declare_id!("GqbUWMWQpgGMprXUEPkxuifKGZidL1CxxFkbqBgVqcDV");
 
 #[program]
 mod counter {
     use super::*;
 
-    pub fn initialize(ctx: Context<Initialize>, bump: u8) -> ProgramResult {
+    pub fn initialize(ctx: Context<Initialize>, bump: u8) -> Result<()> {
         initialize::handler(ctx, bump)
     }
 
-    pub fn increment(ctx: Context<Increment>) -> ProgramResult {
+    pub fn increment(ctx: Context<Increment>) -> Result<()> {
         increment::handler(ctx)
     }
 
-    pub fn decrement(ctx: Context<Decrement>) -> ProgramResult {
+    pub fn decrement(ctx: Context<Decrement>) -> Result<()> {
         decrement::handler(ctx)
     }
 
-    pub fn reset(ctx: Context<Reset>) -> ProgramResult {
+    pub fn reset(ctx: Context<Reset>) -> Result<()> {
         reset::handler(ctx)
     }
 }
