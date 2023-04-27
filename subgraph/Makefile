@@ -19,6 +19,6 @@ build:
 
 idl:
 	@mkdir -p idls
-	@cp -f $(PWD)/../program/target/idl/counter.json idls/counter.json
+	@cp -f $(PWD)/../program/target/idl/counter.json idls/counter.json | echo
 
 .PHONY: deploy create remove codegen build idl

@@ -8,7 +8,7 @@ node_modules:
 
 src/app/idls:
 	@mkdir -p $@
-	@cp -f $(CWD)/../program/target/idl/counter.json $@
+	@cp -f $(CWD)/../program/target/idl/counter.json $@ | echo
 
 lint:
 	@yarn $@
