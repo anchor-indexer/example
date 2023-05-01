@@ -6,6 +6,8 @@ import { createRoot } from 'react-dom/client';
 import '@styles/css';
 import App from '@app/components/global/App';
 
+window.Buffer = Buffer;
+
 declare global {
   interface Window {
     Buffer: any;
