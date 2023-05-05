@@ -3,7 +3,6 @@ import * as anchor from '@project-serum/anchor';
 
 import useProgram from '@app/hooks/useProgram';
 import COUNTER_PROGRAM_IDL from '@app/idls/counter.json';
-import { COUNTER_PROGRAM_ID } from '@app/config';
 
 const ProgramsContext = createContext<{
   counterProgram: anchor.Program | null;
@@ -11,7 +10,7 @@ const ProgramsContext = createContext<{
 
 export const ProgramsProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const counterProgram = useProgram(
-    COUNTER_PROGRAM_ID,
+    new anchor.web3.PublicKey(COUNTER_PROGRAM_IDL['metadata']['address']),
     COUNTER_PROGRAM_IDL as anchor.Idl
   );
 
