@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
 
 import { poll, sleep } from '@app/utils/promise';
+import { API_URL } from '@app/config';
 
 type Status = 'pending' | 'fetching' | 'done';
 
@@ -30,9 +31,7 @@ export function useRequest<T>(
     const load = async () => {
       try {
         const res = await fetch(
-          `https://${
-            import.meta.env.VITE_API_URL
-          }/subgraph-data/${subgraph}?pending=${pending}`,
+          `https://${API_URL}/subgraph-data/${subgraph}?pending=${pending}`,
           {
             method: 'POST',
             body: JSON.stringify({ query }),

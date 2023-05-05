@@ -15,6 +15,8 @@ import { usePrograms } from '@app/contexts/programs';
 import { useWallet } from '@app/contexts/wallet';
 import { useRequest } from '@app/hooks/useRequest';
 
+import { SUBGRAPH_NAME } from '@app/config';
+
 import { useTx } from './tx';
 
 type Counter = {
@@ -87,7 +89,7 @@ export const CounterProvider: FC<{ children: ReactNode }> = ({ children }) => {
     [search]
   );
   const countersRequest = useRequest<{ Counter: Counter[] }>(
-    import.meta.env.VITE_SUBGRAPH_NAME,
+    SUBGRAPH_NAME,
     pending,
     query,
     true
