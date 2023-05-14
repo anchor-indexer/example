@@ -1,22 +1,14 @@
-### Getting started
+# Counter Program Example
 
-### Program
+This repository provides a comprehensive example of a classic counter program. It includes code for running the program, setting up the frontend, and implementing the subgraph.
 
-ensure you have installed anchor as described [here](https://project-serum.github.io/anchor/getting-started/installation.html#install-rust)
-cd into program, and deploy the program
+Navigate through each section to learn more about their respective functionalities and configurations.
 
-```
-cd program
-anchor deploy
-```
 
-#### Frontend
+## Support
 
-cd into frontend, install node packages and start the dev server to run at http://localhost:5200:
+If you encounter any issues during the setup process, please refer to the [official Anchor CLI documentation](https://docs.anchor-indexer.com/en/developing/setup-cli/) or submit an issue on this GitHub repository or reach out on [discord](https://discord.gg/ujxjsznD).
 
-```
-cd frontend
-yarn
-cp .env.local.example .env.local
-make
-```
+## License
+
+MIT
